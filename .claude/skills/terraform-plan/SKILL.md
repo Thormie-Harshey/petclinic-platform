@@ -21,7 +21,7 @@ Run Terraform init and plan for the specified environment.
 
 2. Run `terraform init` in the environment directory:
    ```bash
-   cd terraform/environments/{env} && terraform init
+   cd terraform/environments/{env} && terraform init -backend-config=backend.hcl
    ```
 
 3. Run `terraform plan` and save the plan:

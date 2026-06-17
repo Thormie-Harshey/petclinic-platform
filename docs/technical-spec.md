@@ -92,7 +92,7 @@ These tags are applied via `default_tags` in the AWS provider configuration. Mod
 `scripts/bootstrap-state.sh` provisions the S3 bucket and DynamoDB table. It is:
 - Idempotent (safe to run multiple times)
 - Accepts `--region` parameter (default: `eu-central-1`)
-- Run once before `terraform init`
+- Run once before `terraform init -backend-config=backend.hcl`
 
 ---
 

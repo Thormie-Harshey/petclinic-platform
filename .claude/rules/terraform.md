@@ -62,6 +62,7 @@ tags = {
 
 ## Workflow
 
+0. `terraform init -backend-config=backend.hcl` — required on first run or after backend.tf changes; bucket and dynamodb_table live in the gitignored backend.hcl, not in backend.tf
 1. `terraform fmt -recursive` — format before committing
 2. `terraform validate` — syntax check after every edit
 3. `terraform plan -out plan.out` — always save the plan

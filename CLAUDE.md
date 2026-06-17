@@ -109,6 +109,7 @@ docs/                                # Architecture docs, runbooks, ADRs
 
 ```bash
 # Terraform workflow (always plan before apply)
+terraform init -backend-config=backend.hcl   # Required — bucket/table are in gitignored backend.hcl
 terraform fmt -recursive
 terraform validate
 terraform plan -out plan.out

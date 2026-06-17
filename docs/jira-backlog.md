@@ -259,12 +259,12 @@ Configure the S3 backend in `terraform/environments/dev/backend.tf` pointing to 
 **Technical Spec:** [Terraform State Backend](./technical-spec.md#terraform-state-backend)
 
 **Acceptance Criteria:**
-- [ ] `backend.tf` configured with S3 backend
+- [ ] `backend.tf` configured with S3 backend (partial config — bucket/table in gitignored backend.hcl)
 - [ ] State key: `petclinic/dev/terraform.tfstate`
 - [ ] DynamoDB table referenced for locking
 - [ ] Encryption enabled
 - [ ] Region set to eu-central-1
-- [ ] `terraform init` succeeds
+- [ ] `terraform init -backend-config=backend.hcl` succeeds
 
 ---
 
@@ -283,11 +283,11 @@ Configure the S3 backend in `terraform/environments/prod/backend.tf` with key `p
 **Technical Spec:** [Terraform State Backend](./technical-spec.md#terraform-state-backend)
 
 **Acceptance Criteria:**
-- [ ] `backend.tf` configured with S3 backend
+- [ ] `backend.tf` configured with S3 backend (partial config — bucket/table in gitignored backend.hcl)
 - [ ] State key: `petclinic/prod/terraform.tfstate`
 - [ ] DynamoDB table referenced for locking
 - [ ] Encryption enabled
-- [ ] `terraform init` succeeds
+- [ ] `terraform init -backend-config=backend.hcl` succeeds
 
 ---
 
