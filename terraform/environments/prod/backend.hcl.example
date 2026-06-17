@@ -1,0 +1,6 @@
+# Copy this file to backend.hcl and fill in your AWS account-specific values.
+# backend.hcl is gitignored — never commit it.
+#
+# Run: terraform init -backend-config=backend.hcl
+bucket         = "petclinic-terraform-state-<YOUR-ACCOUNT-ID>"
+dynamodb_table = "petclinic-terraform-locks"

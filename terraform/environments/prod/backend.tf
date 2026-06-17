@@ -1,9 +1,9 @@
 terraform {
   backend "s3" {
-    bucket         = "petclinic-terraform-state-<YOUR-ACCOUNT-ID>"
-    key            = "petclinic/prod/terraform.tfstate"
-    region         = "eu-central-1"
-    encrypt        = true
-    dynamodb_table = "petclinic-terraform-locks"
+    key     = "petclinic/prod/terraform.tfstate"
+    region  = "eu-central-1"
+    encrypt = true
+    # bucket and dynamodb_table are supplied via backend.hcl (gitignored)
+    # Run: terraform init -backend-config=backend.hcl
   }
 }
