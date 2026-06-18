@@ -20,3 +20,9 @@ variable "project" {
   type        = string
   default     = "petclinic"
 }
+
+variable "cluster_admin_arns" {
+  description = "IAM ARNs (users or roles) granted EKS cluster admin access — set to your IAM user/role ARN in terraform.tfvars"
+  type        = list(string)
+  default     = []
+}
