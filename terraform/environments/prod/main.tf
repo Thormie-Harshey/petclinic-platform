@@ -1,5 +1,18 @@
 # Prod environment root module
 
+locals {
+  petclinic_services = [
+    "config-server",
+    "discovery-server",
+    "api-gateway",
+    "customers-service",
+    "visits-service",
+    "vets-service",
+    "genai-service",
+    "admin-server",
+  ]
+}
+
 module "vpc" {
   source = "../../modules/vpc"
 
@@ -34,4 +47,28 @@ module "eks" {
   node_desired_size   = 2
 
   cluster_admin_arns = var.cluster_admin_arns
+}
+
+module "ecr" {
+  source = "../../modules/ecr"
+
+  project              = var.project
+  environment          = var.environment
+  service_names        = local.petclinic_services
+  image_tag_mutability = "IMMUTABLE"
+}
+
+module "rds" {
+  source = "../../modules/rds"
+
+  project     = var.project
+  environment = var.environment
+
+  subnet_ids        = module.vpc.public_subnet_ids
+  security_group_id = module.vpc.rds_sg_id
+
+  instance_class          = "db.t4g.micro"
+  multi_az                = false
+  skip_final_snapshot     = false
+  backup_retention_period = 30
 }

@@ -737,7 +737,7 @@ Create `scripts/ecr-login.sh` that authenticates Docker to the ECR private regis
 # EPIC E-5: Database (RDS MySQL)
 
 **Priority:** P0
-**Description:** Provision RDS MySQL for the three database-backed services (customers, visits, vets). All three share a single `petclinic` database on the same RDS instance (confirmed by cross-service FK constraints). Include encryption, backup, and secrets.
+**Description:** Provision RDS MySQL for the three database-backend services (customers, visits, vets). All three share a single `petclinic` database on the same RDS instance (confirmed by cross-service FK constraints). Include encryption, backup, and secrets.
 **Blocked by:** E-2
 **Blocks:** E-7, E-8
 

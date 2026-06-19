@@ -286,14 +286,28 @@ docker push {account}.dkr.ecr.eu-central-1.amazonaws.com/petclinic-{env}/{servic
 
 ### Lifecycle Policies
 
+Two rules per repository. Rule 1 cleans up untagged images on a fixed timer (CI churn, failed builds); Rule 2 caps tagged history independently.
+
 ```json
 {
   "rules": [
     {
       "rulePriority": 1,
-      "description": "Keep last 10 images",
+      "description": "Expire untagged images after 7 days",
       "selection": {
-        "tagStatus": "any",
+        "tagStatus": "untagged",
+        "countType": "sinceImagePushed",
+        "countUnit": "days",
+        "countNumber": 7
+      },
+      "action": { "type": "expire" }
+    },
+    {
+      "rulePriority": 2,
+      "description": "Keep last 10 tagged images",
+      "selection": {
+        "tagStatus": "tagged",
+        "tagPatternList": ["*"],
         "countType": "imageCountMoreThan",
         "countNumber": 10
       },

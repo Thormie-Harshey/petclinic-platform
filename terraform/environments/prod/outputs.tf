@@ -60,3 +60,38 @@ output "eks_kubeconfig_command" {
   description = "Command to configure kubectl for this cluster"
   value       = module.eks.kubeconfig_command
 }
+
+output "ecr_repository_urls" {
+  description = "Map of service name to ECR repository URL for the prod environment"
+  value       = module.ecr.repository_urls
+}
+
+output "ecr_repository_arns" {
+  description = "Map of service name to ECR repository ARN for the prod environment"
+  value       = module.ecr.repository_arns
+}
+
+output "rds_endpoint" {
+  description = "RDS instance endpoint hostname — use in SPRING_DATASOURCE_URL"
+  value       = module.rds.endpoint
+}
+
+output "rds_port" {
+  description = "RDS instance port (3306)"
+  value       = module.rds.port
+}
+
+output "rds_db_instance_id" {
+  description = "RDS instance identifier"
+  value       = module.rds.db_instance_id
+}
+
+output "rds_secret_arn" {
+  description = "Secrets Manager ARN for RDS credentials — used by External Secrets Operator"
+  value       = module.rds.secret_arn
+}
+
+output "rds_connection_string" {
+  description = "JDBC connection string for Spring Boot services — jdbc:mysql://{endpoint}:3306/petclinic"
+  value       = "jdbc:mysql://${module.rds.endpoint}:${module.rds.port}/petclinic"
+}
