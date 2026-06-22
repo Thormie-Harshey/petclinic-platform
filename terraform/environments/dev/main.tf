@@ -72,3 +72,14 @@ module "rds" {
   skip_final_snapshot     = true
   backup_retention_period = 7
 }
+
+module "dns" {
+  source = "../../modules/dns"
+
+  project           = var.project
+  environment       = var.environment
+  domain_name       = var.domain_name
+  oidc_provider_arn = module.eks.oidc_provider_arn
+  oidc_provider_url = module.eks.oidc_provider_url
+  alb_dns_name      = var.alb_dns_name
+}

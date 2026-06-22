@@ -95,3 +95,28 @@ output "rds_connection_string" {
   description = "JDBC connection string for Spring Boot services — jdbc:mysql://{endpoint}:3306/petclinic"
   value       = "jdbc:mysql://${module.rds.endpoint}:${module.rds.port}/petclinic"
 }
+
+output "dns_name_servers" {
+  description = "Route 53 NS records — paste all 4 into GoDaddy > My Domains > ashayelabs.xyz > DNS > Nameservers"
+  value       = module.dns.name_servers
+}
+
+output "acm_certificate_arn" {
+  description = "ACM certificate ARN — replace REPLACE_WITH_ACM_CERTIFICATE_ARN in k8s/base/ingress/ingress.yaml"
+  value       = module.dns.certificate_arn
+}
+
+output "route53_zone_id" {
+  description = "Route 53 hosted zone ID for ashayelabs.xyz"
+  value       = module.dns.zone_id
+}
+
+output "lb_controller_role_arn" {
+  description = "IRSA role ARN for the AWS LB Controller — pass as 2nd argument to scripts/install-lb-controller.sh"
+  value       = module.dns.lb_controller_role_arn
+}
+
+output "app_url" {
+  description = "Application URL (petclinic-dev.ashayelabs.xyz) — available after second terraform apply sets alb_dns_name"
+  value       = module.dns.app_url
+}

@@ -21,3 +21,20 @@ variable "cluster_admin_arns" {
   type        = list(string)
   default     = []
 }
+
+variable "domain_name" {
+  description = "Root domain name purchased on GoDaddy (e.g. ashayelabs.xyz) — set in terraform.tfvars"
+  type        = string
+}
+
+variable "alb_dns_name" {
+  description = <<-EOT
+    DNS hostname of the ALB provisioned by the Ingress controller.
+    Leave unset (or null) on first apply — the ALB does not exist yet.
+    After applying k8s/base/ingress/ingress.yaml and the ALB is ready, run:
+      kubectl get ingress -n petclinic-dev -o jsonpath='{.items[0].status.loadBalancer.ingress[0].hostname}'
+    Then add  alb_dns_name = "<hostname>"  to terraform.tfvars and re-apply.
+  EOT
+  type        = string
+  default     = null
+}
