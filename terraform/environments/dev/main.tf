@@ -83,3 +83,13 @@ module "dns" {
   oidc_provider_url = module.eks.oidc_provider_url
   alb_dns_name      = var.alb_dns_name
 }
+
+module "secrets" {
+  source = "../../modules/secrets"
+
+  project           = var.project
+  environment       = var.environment
+  openai_api_key    = var.openai_api_key
+  oidc_provider_arn = module.eks.oidc_provider_arn
+  oidc_provider_url = module.eks.oidc_provider_url
+}

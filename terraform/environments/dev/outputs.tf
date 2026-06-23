@@ -120,3 +120,13 @@ output "app_url" {
   description = "Application URL (petclinic-dev.ashayelabs.xyz) — available after second terraform apply sets alb_dns_name"
   value       = module.dns.app_url
 }
+
+output "eso_role_arn" {
+  description = "IRSA role ARN for External Secrets Operator — pass to scripts/install-eso.sh"
+  value       = module.secrets.eso_role_arn
+}
+
+output "openai_secret_arn" {
+  description = "Secrets Manager ARN for the OpenAI API key"
+  value       = module.secrets.openai_secret_arn
+}

@@ -26,3 +26,10 @@ variable "cluster_admin_arns" {
   type        = list(string)
   default     = []
 }
+
+variable "openai_api_key" {
+  description = "OpenAI API key for genai-service — set in terraform.tfvars (gitignored, never commit)"
+  type        = string
+  sensitive   = true
+  default     = ""
+}

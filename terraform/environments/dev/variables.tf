@@ -27,6 +27,13 @@ variable "domain_name" {
   type        = string
 }
 
+variable "openai_api_key" {
+  description = "OpenAI API key for genai-service — set in terraform.tfvars (gitignored, never commit)"
+  type        = string
+  sensitive   = true
+  default     = ""
+}
+
 variable "alb_dns_name" {
   description = <<-EOT
     DNS hostname of the ALB provisioned by the Ingress controller.
