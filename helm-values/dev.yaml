@@ -1,0 +1,28 @@
+## Dev environment overrides — merged with per-service values by ArgoCD (E-16)
+## All services in petclinic-dev get these defaults unless the service file overrides them.
+
+global:
+  environment: dev
+  imageRegistry: 852396291743.dkr.ecr.eu-central-1.amazonaws.com
+  imageRepositoryPrefix: petclinic-dev
+  imageTag: latest
+
+namespace: petclinic-dev
+
+replicaCount: 1
+
+autoscaling:
+  enabled: false
+
+podDisruptionBudget:
+  enabled: false
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi
+
+imagePullPolicy: Always

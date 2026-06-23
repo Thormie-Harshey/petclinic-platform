@@ -1,0 +1,35 @@
+## Prod environment overrides — merged with per-service values by ArgoCD (E-16)
+## All services in petclinic-prod get these defaults unless the service file overrides them.
+
+global:
+  environment: prod
+  imageRegistry: 852396291743.dkr.ecr.eu-central-1.amazonaws.com
+  imageRepositoryPrefix: petclinic-prod
+  imageTag: latest
+
+namespace: petclinic-prod
+
+replicaCount: 2
+
+autoscaling:
+  enabled: true
+  targetCPUUtilizationPercentage: 70
+
+podDisruptionBudget:
+  enabled: true
+  minAvailable: 1
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi
+
+imagePullPolicy: Always
+
+## Per-service replica overrides for services that should NOT run 2 replicas in prod.
+## These are applied via per-service values files (helm-values/{service}.yaml) in E-16.
+## genai-service: replicaCount=1, autoscaling.minReplicas=1, autoscaling.maxReplicas=3
+## admin-server:  replicaCount=1, autoscaling.enabled=false
