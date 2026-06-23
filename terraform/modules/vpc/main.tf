@@ -195,6 +195,16 @@ resource "aws_security_group_rule" "node_ingress_nodeport_from_alb" {
   security_group_id        = aws_security_group.eks_node.id
 }
 
+resource "aws_security_group_rule" "node_ingress_pod_from_alb" {
+  type                     = "ingress"
+  description              = "Pod traffic from ALB (target-type: ip direct to pod port)"
+  from_port                = 8080
+  to_port                  = 8080
+  protocol                 = "tcp"
+  source_security_group_id = aws_security_group.alb.id
+  security_group_id        = aws_security_group.eks_node.id
+}
+
 resource "aws_security_group_rule" "node_egress_all" {
   type              = "egress"
   description       = "All outbound traffic"
