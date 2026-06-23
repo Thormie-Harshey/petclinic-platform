@@ -1,4 +1,4 @@
-apiVersion: apps/v1
+﻿apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: genai-service
@@ -55,7 +55,7 @@ spec:
             readOnlyRootFilesystem: true
       containers:
         - name: genai-service
-          image: 852396291743.dkr.ecr.eu-central-1.amazonaws.com/petclinic-dev/genai-service:latest
+          image: 852396291743.dkr.ecr.eu-central-1.amazonaws.com/petclinic-dev/genai-service:v1.0.0
           imagePullPolicy: Always
           ports:
             - name: http

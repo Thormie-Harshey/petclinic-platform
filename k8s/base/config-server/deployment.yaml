@@ -1,4 +1,4 @@
-apiVersion: apps/v1
+﻿apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: config-server
@@ -30,7 +30,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: config-server
-          image: 852396291743.dkr.ecr.eu-central-1.amazonaws.com/petclinic-dev/config-server:latest
+          image: 852396291743.dkr.ecr.eu-central-1.amazonaws.com/petclinic-dev/config-server:v1.0.0
           imagePullPolicy: Always
           ports:
             - name: http

@@ -1,4 +1,4 @@
-apiVersion: apps/v1
+﻿apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: discovery-server
@@ -43,7 +43,7 @@ spec:
             readOnlyRootFilesystem: true
       containers:
         - name: discovery-server
-          image: 852396291743.dkr.ecr.eu-central-1.amazonaws.com/petclinic-dev/discovery-server:latest
+          image: 852396291743.dkr.ecr.eu-central-1.amazonaws.com/petclinic-dev/discovery-server:v1.0.0
           imagePullPolicy: Always
           ports:
             - name: http
