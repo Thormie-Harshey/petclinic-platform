@@ -1,0 +1,66 @@
+name: Update Image Tags
+
+# Triggered by the app repo (petclinic-app) after a successful build-push run.
+# The app repo calls the GitHub API with event type "app-image-built" and a payload
+# containing the commit SHA and the list of services that were rebuilt.
+# This workflow commits the new tags to helm-values/ so ArgoCD can pick them up.
+on:
+  repository_dispatch:
+    types: [app-image-built]
+
+jobs:
+  update-tags:
+    name: Update helm-values image tags
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout platform repo
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Install yq
+        run: |
+          wget -qO /usr/local/bin/yq \
+            https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64
+          chmod +x /usr/local/bin/yq
+
+      - name: Update image tags in helm-values
+        env:
+          SHA: ${{ github.event.client_payload.sha }}
+          SERVICES: ${{ github.event.client_payload.services }}
+        run: |
+          echo "Updating image tags to ${SHA} for services: ${SERVICES}"
+
+          for service in ${SERVICES}; do
+            VALUES_FILE="helm-values/${service}.yaml"
+
+            if [ ! -f "${VALUES_FILE}" ]; then
+              echo "ERROR: ${VALUES_FILE} not found — skipping ${service}"
+              continue
+            fi
+
+            yq -i ".image.tag = \"${SHA}\"" "${VALUES_FILE}"
+            echo "  Updated ${VALUES_FILE} → image.tag: ${SHA}"
+          done
+
+      - name: Commit and push updated tags
+        env:
+          SHA: ${{ github.event.client_payload.sha }}
+          SERVICES: ${{ github.event.client_payload.services }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          git add helm-values/
+
+          # Only commit if something actually changed
+          if git diff --cached --quiet; then
+            echo "No changes to commit — tags were already at ${SHA}"
+            exit 0
+          fi
+
+          git commit -m "ci: update image tags to ${SHA} (${SERVICES})"
+          git push

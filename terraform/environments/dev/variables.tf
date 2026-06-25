@@ -34,6 +34,12 @@ variable "openai_api_key" {
   default     = ""
 }
 
+variable "github_repo" {
+  description = "GitHub repository allowed to assume the CI role — format: org/repo (e.g. Thormie-Harshey/petclinic-app)"
+  type        = string
+  default     = "Thormie-Harshey/petclinic-app"
+}
+
 variable "alb_dns_name" {
   description = <<-EOT
     DNS hostname of the ALB provisioned by the Ingress controller.

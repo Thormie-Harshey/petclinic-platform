@@ -93,3 +93,11 @@ module "secrets" {
   oidc_provider_arn = module.eks.oidc_provider_arn
   oidc_provider_url = module.eks.oidc_provider_url
 }
+
+module "github_oidc" {
+  source = "../../modules/github-oidc"
+
+  project     = var.project
+  environment = var.environment
+  github_repo = var.github_repo
+}
