@@ -1,16 +1,12 @@
 image:
   name: genai-service
-  tag: v1.0.0
-
+  tag: e98d5fc
 service:
   port: 8084
-
 component: service
 springProfiles: "docker"
-
 configData:
   CONFIG_SERVER_URL: "http://config-server:8888"
-
 # OpenAI key injected from the openai-api-key K8s Secret (synced by ESO from Secrets Manager)
 env:
   - name: OPENAI_API_KEY
@@ -18,7 +14,6 @@ env:
       secretKeyRef:
         name: openai-api-key
         key: OPENAI_API_KEY
-
 initContainers:
   - name: wait-for-config-server
     image: busybox:1.36
@@ -44,7 +39,6 @@ initContainers:
         drop:
           - ALL
       readOnlyRootFilesystem: true
-
 # Single replica in all environments; HPA handles bursts in prod. No PDB (low-priority service).
 replicaCount: 1
 autoscaling:
