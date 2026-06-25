@@ -1520,13 +1520,15 @@ _Prod deployment is now handled by ArgoCD (E-17) with manual sync policy. No sep
 **Blocked by:** E-1
 
 **Description:**
-Configure OIDC federation between GitHub Actions and AWS, plus GitHub Secrets for CI. Prod deployment approval is handled by ArgoCD manual sync (not GitHub Environments).
+Configure OIDC federation between GitHub Actions and AWS, plus GitHub Secrets and Variables for CI. Prod deployment approval is handled by ArgoCD manual sync (not GitHub Environments).
 
 **Technical Spec:** [CI/CD Pipeline](./technical-spec.md#cicd-pipeline)
 
 **Acceptance Criteria:**
 - [ ] OIDC IAM role for GitHub Actions (federated identity — no long-lived keys)
-- [ ] GitHub Secrets: AWS region, AWS account ID (for ECR registry URL)
+- [ ] **Secrets tab** (sensitive — masked in logs): `PLATFORM_REPO_TOKEN` (fine-grained PAT with write access to platform repo), `AWS_ROLE_ARN` (OIDC role ARN from `terraform output`)
+- [ ] **Variables tab** (non-sensitive — visible in logs): `AWS_REGION=eu-central-1`, `AWS_ACCOUNT_ID=<12-digit>`, `PLATFORM_REPO=<username>/petclinic-platform`
+- [ ] Workflows reference secrets via `${{ secrets.X }}` and variables via `${{ vars.X }}` — wrong tab = empty string = pipeline fails at that step
 - [ ] IAM role permissions include `ecr:GetAuthorizationToken`, `ecr:BatchCheckLayerAvailability`, `ecr:PutImage`, etc.
 - [ ] Documentation: how to configure OIDC federation
 

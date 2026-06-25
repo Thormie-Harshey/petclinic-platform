@@ -13,10 +13,7 @@ resource "aws_iam_openid_connect_provider" "github_actions" {
   thumbprint_list = ["6938fd4d98bab03faadb97b34396831e3780aea1"]
 
   tags = merge(var.tags, {
-    Name        = "github-actions-oidc"
-    Project     = var.project
-    Environment = var.environment
-    ManagedBy   = "terraform"
+    Name = "github-actions-oidc"
   })
 }
 
@@ -46,10 +43,7 @@ resource "aws_iam_role" "github_actions" {
   })
 
   tags = merge(var.tags, {
-    Name        = var.role_name
-    Project     = var.project
-    Environment = var.environment
-    ManagedBy   = "terraform"
+    Name = var.role_name
   })
 }
 
@@ -84,11 +78,7 @@ resource "aws_iam_policy" "ecr_push" {
     ]
   })
 
-  tags = merge(var.tags, {
-    Project     = var.project
-    Environment = var.environment
-    ManagedBy   = "terraform"
-  })
+  tags = var.tags
 }
 
 resource "aws_iam_role_policy_attachment" "ecr_push" {
