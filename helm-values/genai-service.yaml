@@ -1,0 +1,54 @@
+image:
+  name: genai-service
+  tag: v1.0.0
+
+service:
+  port: 8084
+
+component: service
+springProfiles: "docker"
+
+configData:
+  CONFIG_SERVER_URL: "http://config-server:8888"
+
+# OpenAI key injected from the openai-api-key K8s Secret (synced by ESO from Secrets Manager)
+env:
+  - name: OPENAI_API_KEY
+    valueFrom:
+      secretKeyRef:
+        name: openai-api-key
+        key: OPENAI_API_KEY
+
+initContainers:
+  - name: wait-for-config-server
+    image: busybox:1.36
+    command:
+      - sh
+      - -c
+      - until wget -qO- http://config-server:8888/actuator/health; do sleep 5; done
+    securityContext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+          - ALL
+      readOnlyRootFilesystem: true
+  - name: wait-for-discovery-server
+    image: busybox:1.36
+    command:
+      - sh
+      - -c
+      - until wget -qO- http://discovery-server:8761/actuator/health; do sleep 5; done
+    securityContext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+          - ALL
+      readOnlyRootFilesystem: true
+
+# Single replica in all environments; HPA handles bursts in prod. No PDB (low-priority service).
+replicaCount: 1
+autoscaling:
+  enabled: true
+  minReplicas: 1
+  maxReplicas: 3
+  targetCPUUtilizationPercentage: 70

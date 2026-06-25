@@ -1,0 +1,12 @@
+Petclinic service {{ include "petclinic-service.name" . }} deployed to {{ .Release.Namespace }}.
+
+  Image:    {{ .Values.image.registry }}/{{ .Values.image.name }}:{{ .Values.image.tag }}
+  Port:     {{ .Values.service.port }}
+  Replicas: {{ .Values.replicaCount }}
+
+{{- if .Values.autoscaling.enabled }}
+  HPA:      enabled (min={{ .Values.autoscaling.minReplicas }}, max={{ .Values.autoscaling.maxReplicas }}, cpu={{ .Values.autoscaling.targetCPUUtilizationPercentage }}%)
+{{- end }}
+{{- if .Values.podDisruptionBudget.enabled }}
+  PDB:      enabled (minAvailable={{ .Values.podDisruptionBudget.minAvailable }})
+{{- end }}

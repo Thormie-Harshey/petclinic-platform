@@ -1,35 +1,22 @@
-## Prod environment overrides — merged with per-service values by ArgoCD (E-16)
-## All services in petclinic-prod get these defaults unless the service file overrides them.
+# Prod environment overrides — merged LAST so these win over per-service values.
+# Deploy: helm upgrade --install {svc} helm/petclinic-service/ -n petclinic-prod
+#         -f helm-values/{service}.yaml -f helm-values/prod.yaml
 
-global:
-  environment: prod
-  imageRegistry: 852396291743.dkr.ecr.eu-central-1.amazonaws.com
-  imageRepositoryPrefix: petclinic-prod
-  imageTag: latest
+image:
+  registry: "852396291743.dkr.ecr.eu-central-1.amazonaws.com/petclinic-prod"
+  pullPolicy: Always
+  # tag is set per-service in helm-values/{service}.yaml — CI updates it there
 
-namespace: petclinic-prod
+# replicaCount is intentionally NOT set here.
+# Each per-service file defines the prod replica count:
+#   - config-server, discovery-server, api-gateway, customers, visits, vets: 2
+#   - genai-service, admin-server: 1
+# This allows per-service files to win when prod.yaml doesn't override.
 
-replicaCount: 2
+# autoscaling.enabled is intentionally NOT set here.
+# Per-service files set enabled: true for services that have HPA in prod.
+# (api-gateway, customers-service, visits-service, vets-service, genai-service)
 
-autoscaling:
-  enabled: true
-  targetCPUUtilizationPercentage: 70
-
-podDisruptionBudget:
-  enabled: true
-  minAvailable: 1
-
-resources:
-  requests:
-    cpu: 100m
-    memory: 128Mi
-  limits:
-    cpu: 500m
-    memory: 512Mi
-
-imagePullPolicy: Always
-
-## Per-service replica overrides for services that should NOT run 2 replicas in prod.
-## These are applied via per-service values files (helm-values/{service}.yaml) in E-16.
-## genai-service: replicaCount=1, autoscaling.minReplicas=1, autoscaling.maxReplicas=3
-## admin-server:  replicaCount=1, autoscaling.enabled=false
+# podDisruptionBudget.enabled is intentionally NOT set here.
+# Per-service files set enabled: true for services that have PDB in prod.
+# (config-server, discovery-server, api-gateway, customers, visits, vets)

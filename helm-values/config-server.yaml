@@ -1,0 +1,39 @@
+image:
+  name: config-server
+  tag: v1.0.0
+
+service:
+  port: 8888
+
+component: server
+springProfiles: "docker"
+
+# config-server uses /actuator/health for all probes — it has no readiness/liveness sub-paths
+probes:
+  startup:
+    path: /actuator/health
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 30
+  readiness:
+    path: /actuator/health
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 3
+  liveness:
+    path: /actuator/health
+    periodSeconds: 15
+    timeoutSeconds: 5
+    failureThreshold: 3
+
+configData:
+  GIT_REPO_URI: "https://github.com/spring-petclinic/spring-petclinic-microservices-config"
+  GIT_DEFAULT_LABEL: "main"
+
+initContainers: []
+env: []
+
+# Prod: 2 replicas (dev.yaml overrides to 1). PDB enabled in prod (dev.yaml overrides to false).
+replicaCount: 2
+podDisruptionBudget:
+  enabled: true

@@ -1,28 +1,18 @@
-## Dev environment overrides — merged with per-service values by ArgoCD (E-16)
-## All services in petclinic-dev get these defaults unless the service file overrides them.
+# Dev environment overrides — merged LAST so these win over per-service values.
+# Deploy: helm upgrade --install {svc} helm/petclinic-service/ -n petclinic-dev
+#         -f helm-values/{service}.yaml -f helm-values/dev.yaml
 
-global:
-  environment: dev
-  imageRegistry: 852396291743.dkr.ecr.eu-central-1.amazonaws.com
-  imageRepositoryPrefix: petclinic-dev
-  imageTag: latest
+image:
+  registry: "852396291743.dkr.ecr.eu-central-1.amazonaws.com/petclinic-dev"
+  pullPolicy: Always
+  # tag is set per-service in helm-values/{service}.yaml — CI updates it there
 
-namespace: petclinic-dev
-
+# Force 1 replica in dev regardless of what the per-service file sets.
 replicaCount: 1
 
+# Disable HPA and PDB in dev — per-service files set enabled: true for prod use.
 autoscaling:
   enabled: false
 
 podDisruptionBudget:
   enabled: false
-
-resources:
-  requests:
-    cpu: 100m
-    memory: 128Mi
-  limits:
-    cpu: 500m
-    memory: 512Mi
-
-imagePullPolicy: Always

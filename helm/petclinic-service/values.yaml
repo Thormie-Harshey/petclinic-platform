@@ -1,0 +1,72 @@
+replicaCount: 1
+
+image:
+  registry: ""        # Set per-environment: {account}.dkr.ecr.eu-central-1.amazonaws.com/petclinic-{env}
+  name: ""            # Set per-service: e.g. config-server
+  tag: "latest"       # Overridden by CI via --set image.tag={sha}
+  pullPolicy: IfNotPresent
+
+component: service    # app.kubernetes.io/component value
+
+service:
+  port: 8080
+
+springProfiles: "docker"
+
+configData: {}        # ConfigMap key-value pairs (set per-service)
+
+env: []               # Extra env vars rendered after SPRING_PROFILES_ACTIVE (secret refs, etc.)
+
+initContainers: []    # Startup dependency init containers (set per-service)
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi
+
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 1000
+  fsGroup: 1000
+  seccompProfile:
+    type: RuntimeDefault
+
+containerSecurityContext:
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop:
+      - ALL
+  readOnlyRootFilesystem: false
+
+probes:
+  startup:
+    path: /actuator/health
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 30
+  readiness:
+    path: /actuator/health/readiness
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 3
+  liveness:
+    path: /actuator/health/liveness
+    periodSeconds: 15
+    timeoutSeconds: 5
+    failureThreshold: 3
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 4
+  targetCPUUtilizationPercentage: 70
+
+podDisruptionBudget:
+  enabled: false
+  minAvailable: 1
+
+serviceAccount:
+  annotations: {}

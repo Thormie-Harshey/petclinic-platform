@@ -1,0 +1,43 @@
+image:
+  name: admin-server
+  tag: v1.0.0
+
+service:
+  port: 9090
+
+component: admin
+springProfiles: "docker"
+
+configData:
+  CONFIG_SERVER_URL: "http://config-server:8888"
+
+initContainers:
+  - name: wait-for-config-server
+    image: busybox:1.36
+    command:
+      - sh
+      - -c
+      - until wget -qO- http://config-server:8888/actuator/health; do sleep 5; done
+    securityContext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+          - ALL
+      readOnlyRootFilesystem: true
+  - name: wait-for-discovery-server
+    image: busybox:1.36
+    command:
+      - sh
+      - -c
+      - until wget -qO- http://discovery-server:8761/actuator/health; do sleep 5; done
+    securityContext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+          - ALL
+      readOnlyRootFilesystem: true
+
+env: []
+
+# Single replica; monitoring dashboard — HA not required. No HPA, no PDB.
+replicaCount: 1
