@@ -47,7 +47,11 @@ initContainers:
           - ALL
       readOnlyRootFilesystem: true
 
-env: []
+env:
+  - name: MANAGEMENT_ZIPKIN_TRACING_ENDPOINT
+    value: "http://zipkin.tracing:9411/api/v2/spans"
+  - name: MANAGEMENT_TRACING_SAMPLING_PROBABILITY
+    value: "1.0"
 
 # Prod: 2 replicas, HPA min2/max6, PDB. dev.yaml disables HPA and PDB.
 replicaCount: 2

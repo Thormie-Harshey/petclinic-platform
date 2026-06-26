@@ -1604,10 +1604,10 @@ Deploy Prometheus on EKS to scrape metrics from all 8 Petclinic services via the
 
 **Acceptance Criteria:**
 - [ ] Prometheus deployed to monitoring namespace
-- [ ] Scrape config targets all 8 services on /actuator/prometheus
+- [ ] Scrape config targets exactly 5 services on /actuator/prometheus: api-gateway, customers-service, visits-service, vets-service, genai-service (these are the only services with micrometer-registry-prometheus in their pom.xml — config-server, discovery-server, and admin-server do not have the dependency and will return 404)
 - [ ] Scrape interval: 15s
 - [ ] Prometheus web UI accessible (port-forward or ingress)
-- [ ] Verified: metrics from all services visible in Prometheus
+- [ ] Verified: metrics from all 5 services visible in Prometheus
 - [ ] Persistent volume for metric retention (configurable days)
 
 ---

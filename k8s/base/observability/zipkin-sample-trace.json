@@ -1,0 +1,190 @@
+[
+  {
+    "traceId": "a1b2c3d4e5f60001a1b2c3d4e5f60001",
+    "id": "a1b2c3d4e5f60001",
+    "name": "GET /api/vet/vets",
+    "kind": "SERVER",
+    "timestamp": 1750000000000000,
+    "duration": 52000,
+    "localEndpoint": {
+      "serviceName": "api-gateway",
+      "ipv4": "10.0.1.50",
+      "port": 8080
+    },
+    "tags": {
+      "http.method": "GET",
+      "http.path": "/api/vet/vets",
+      "http.status_code": "200"
+    }
+  },
+  {
+    "traceId": "a1b2c3d4e5f60001a1b2c3d4e5f60001",
+    "id": "b2c3d4e5f6000102",
+    "parentId": "a1b2c3d4e5f60001",
+    "name": "GET /vets",
+    "kind": "CLIENT",
+    "timestamp": 1750000000005000,
+    "duration": 42000,
+    "localEndpoint": {
+      "serviceName": "api-gateway",
+      "ipv4": "10.0.1.50",
+      "port": 8080
+    },
+    "remoteEndpoint": {
+      "serviceName": "vets-service",
+      "ipv4": "10.0.2.83",
+      "port": 8083
+    },
+    "tags": {
+      "http.method": "GET",
+      "http.path": "/vets",
+      "http.status_code": "200"
+    }
+  },
+  {
+    "traceId": "a1b2c3d4e5f60001a1b2c3d4e5f60001",
+    "id": "c3d4e5f600010203",
+    "parentId": "b2c3d4e5f6000102",
+    "name": "GET /vets",
+    "kind": "SERVER",
+    "timestamp": 1750000000008000,
+    "duration": 38000,
+    "localEndpoint": {
+      "serviceName": "vets-service",
+      "ipv4": "10.0.2.83",
+      "port": 8083
+    },
+    "tags": {
+      "http.method": "GET",
+      "http.path": "/vets",
+      "http.status_code": "200",
+      "cache": "hit"
+    }
+  },
+  {
+    "traceId": "d4e5f60001020304d4e5f60001020304",
+    "id": "d4e5f60001020304",
+    "name": "GET /api/customer/owners",
+    "kind": "SERVER",
+    "timestamp": 1750000001000000,
+    "duration": 78000,
+    "localEndpoint": {
+      "serviceName": "api-gateway",
+      "ipv4": "10.0.1.50",
+      "port": 8080
+    },
+    "tags": {
+      "http.method": "GET",
+      "http.path": "/api/customer/owners",
+      "http.status_code": "200"
+    }
+  },
+  {
+    "traceId": "d4e5f60001020304d4e5f60001020304",
+    "id": "e5f6000102030405",
+    "parentId": "d4e5f60001020304",
+    "name": "GET /owners",
+    "kind": "CLIENT",
+    "timestamp": 1750000001004000,
+    "duration": 68000,
+    "localEndpoint": {
+      "serviceName": "api-gateway",
+      "ipv4": "10.0.1.50",
+      "port": 8080
+    },
+    "remoteEndpoint": {
+      "serviceName": "customers-service",
+      "ipv4": "10.0.1.81",
+      "port": 8081
+    },
+    "tags": {
+      "http.method": "GET",
+      "http.path": "/owners",
+      "http.status_code": "200"
+    }
+  },
+  {
+    "traceId": "d4e5f60001020304d4e5f60001020304",
+    "id": "f60001020304050f",
+    "parentId": "e5f6000102030405",
+    "name": "GET /owners",
+    "kind": "SERVER",
+    "timestamp": 1750000001008000,
+    "duration": 62000,
+    "localEndpoint": {
+      "serviceName": "customers-service",
+      "ipv4": "10.0.1.81",
+      "port": 8081
+    },
+    "tags": {
+      "http.method": "GET",
+      "http.path": "/owners",
+      "http.status_code": "200",
+      "db.type": "mysql",
+      "db.statement": "SELECT * FROM owners"
+    }
+  },
+  {
+    "traceId": "f700010203040506f700010203040506",
+    "id": "f700010203040506",
+    "name": "POST /api/customer/owners/1/pets",
+    "kind": "SERVER",
+    "timestamp": 1750000002000000,
+    "duration": 145000,
+    "localEndpoint": {
+      "serviceName": "api-gateway",
+      "ipv4": "10.0.1.50",
+      "port": 8080
+    },
+    "tags": {
+      "http.method": "POST",
+      "http.path": "/api/customer/owners/1/pets",
+      "http.status_code": "201"
+    }
+  },
+  {
+    "traceId": "f700010203040506f700010203040506",
+    "id": "0800010203040507",
+    "parentId": "f700010203040506",
+    "name": "POST /owners/1/pets",
+    "kind": "CLIENT",
+    "timestamp": 1750000002003000,
+    "duration": 138000,
+    "localEndpoint": {
+      "serviceName": "api-gateway",
+      "ipv4": "10.0.1.50",
+      "port": 8080
+    },
+    "remoteEndpoint": {
+      "serviceName": "customers-service",
+      "ipv4": "10.0.1.81",
+      "port": 8081
+    },
+    "tags": {
+      "http.method": "POST",
+      "http.path": "/owners/1/pets",
+      "http.status_code": "201"
+    }
+  },
+  {
+    "traceId": "f700010203040506f700010203040506",
+    "id": "0900010203040508",
+    "parentId": "0800010203040507",
+    "name": "POST /owners/1/pets",
+    "kind": "SERVER",
+    "timestamp": 1750000002007000,
+    "duration": 130000,
+    "localEndpoint": {
+      "serviceName": "customers-service",
+      "ipv4": "10.0.1.81",
+      "port": 8081
+    },
+    "tags": {
+      "http.method": "POST",
+      "http.path": "/owners/1/pets",
+      "http.status_code": "201",
+      "db.type": "mysql",
+      "db.statement": "INSERT INTO pets"
+    }
+  }
+]
