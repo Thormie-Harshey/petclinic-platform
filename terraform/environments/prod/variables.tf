@@ -27,6 +27,11 @@ variable "cluster_admin_arns" {
   default     = []
 }
 
+variable "budget_alert_email" {
+  description = "Email address to receive AWS budget alert notifications"
+  type        = string
+}
+
 variable "openai_api_key" {
   description = "OpenAI API key for genai-service — set in terraform.tfvars (gitignored, never commit)"
   type        = string

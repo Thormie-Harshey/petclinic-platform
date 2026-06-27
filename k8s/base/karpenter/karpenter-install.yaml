@@ -1,0 +1,46 @@
+# Karpenter Installation — Helm Command
+#
+# This file is NOT a kubectl-apply manifest.
+# Run the commands below once after `terraform apply` has created the IAM role,
+# SQS queue, and instance profile.
+#
+# STEP 1 — Point kubectl at the dev cluster
+#   aws eks update-kubeconfig --name petclinic-dev --region eu-central-1
+#
+# STEP 2 — Pull Terraform outputs (run from terraform/environments/dev/)
+#   export CLUSTER_NAME=$(terraform output -raw cluster_name)
+#   export QUEUE_NAME=$(terraform output -raw karpenter_queue_name)
+#   export ROLE_ARN=$(terraform output -raw karpenter_role_arn)
+#
+#   terraform output -raw karpenter_queue_name  → petclinic-dev-karpenter-interruption
+#   terraform output -raw karpenter_role_arn    → arn:aws:iam::852396291743:role/petclinic-dev-karpenter-role
+#
+# STEP 3 — Install Karpenter via Helm
+#
+#   helm upgrade --install karpenter \
+#     oci://public.ecr.aws/karpenter/karpenter \
+#     --version 1.0.0 \
+#     --namespace kube-system \
+#     --set settings.clusterName=${CLUSTER_NAME} \
+#     --set settings.interruptionQueue=${QUEUE_NAME} \
+#     --set serviceAccount.annotations."eks\.amazonaws\.com/role-arn"=${ROLE_ARN} \
+#     --wait
+#
+# What each flag does:
+#   --version 1.0.0                    pin to a specific version (never use latest in install)
+#   --namespace kube-system            Karpenter runs alongside other cluster add-ons
+#   settings.clusterName               tells Karpenter which EKS cluster to manage
+#   settings.interruptionQueue         SQS queue name for spot termination warnings
+#   serviceAccount.annotations         IRSA annotation — binds the pod to the IAM role
+#   --wait                             blocks until Karpenter pods are Ready
+#
+# STEP 4 — Verify Karpenter is running
+#   kubectl get pods -n kube-system -l app.kubernetes.io/name=karpenter
+#   kubectl logs -n kube-system -l app.kubernetes.io/name=karpenter --tail=50
+#
+# STEP 5 — Apply the NodePool and EC2NodeClass
+#   kubectl apply -f k8s/base/karpenter/nodepool.yaml
+#
+# STEP 6 — Verify Karpenter can see the node class
+#   kubectl get nodepool
+#   kubectl get ec2nodeclass

@@ -40,6 +40,11 @@ variable "github_repo" {
   default     = "Thormie-Harshey/petclinic-app"
 }
 
+variable "budget_alert_email" {
+  description = "Email address to receive AWS budget alert notifications"
+  type        = string
+}
+
 variable "alb_dns_name" {
   description = <<-EOT
     DNS hostname of the ALB provisioned by the Ingress controller.

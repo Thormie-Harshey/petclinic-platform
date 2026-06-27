@@ -1,0 +1,79 @@
+# NodePool + EC2NodeClass for Petclinic (on-demand, Graviton free trial active)
+#
+# These two resources tell Karpenter:
+#   NodePool     = WHEN and WHAT to provision (rules, limits, disruption policy)
+#   EC2NodeClass = HOW to provision (AMI, subnets, security groups, instance profile)
+#
+# NOTE: capacity-type is set to on-demand only while the Graviton free trial is active.
+# Switch to spot after the trial expires — see nodepool-spot-dev.yaml.
+#
+# For prod: replace petclinic-dev with petclinic-prod in subnetSelectorTerms,
+# securityGroupSelectorTerms, and instanceProfile.
+---
+apiVersion: karpenter.sh/v1
+kind: NodePool
+metadata:
+  name: default
+  labels:
+    app.kubernetes.io/part-of: petclinic
+    app.kubernetes.io/managed-by: kubectl
+spec:
+  template:
+    spec:
+      requirements:
+        # ARM64 only — matches our t4g Graviton nodes and docker images built for linux/arm64
+        - key: kubernetes.io/arch
+          operator: In
+          values: ["arm64"]
+        # on-demand only while Graviton free trial is active (until Dec 2026)
+        - key: karpenter.sh/capacity-type
+          operator: In
+          values: ["on-demand"]
+        # Constrain to small instance families — prevents Karpenter picking expensive sizes
+        - key: node.kubernetes.io/instance-type
+          operator: In
+          values: ["t4g.small", "t4g.medium"]
+      nodeClassRef:
+        group: karpenter.k8s.aws
+        kind: EC2NodeClass
+        name: default
+  limits:
+    # Hard ceiling — Karpenter will not provision beyond these totals across all nodes.
+    # Without limits a single mis-configured deployment could spin up unlimited nodes.
+    cpu: "8"
+    memory: 32Gi
+  disruption:
+    # Remove nodes that are empty OR underutilised after 30 seconds.
+    # This keeps the cluster lean — idle nodes are terminated automatically.
+    consolidationPolicy: WhenEmptyOrUnderutilized
+    consolidateAfter: 30s
+---
+apiVersion: karpenter.k8s.aws/v1
+kind: EC2NodeClass
+metadata:
+  name: default
+  labels:
+    app.kubernetes.io/part-of: petclinic
+    app.kubernetes.io/managed-by: kubectl
+spec:
+  # Amazon Linux 2023 — latest patched version, compatible with EKS ARM64 nodes
+  amiSelectorTerms:
+    - alias: al2023@latest
+  # Karpenter discovers subnets by the karpenter.sh/discovery tag set in terraform/modules/vpc/
+  subnetSelectorTerms:
+    - tags:
+        karpenter.sh/discovery: "petclinic-dev"
+  # Karpenter discovers the node security group by the same tag
+  securityGroupSelectorTerms:
+    - tags:
+        karpenter.sh/discovery: "petclinic-dev"
+  # Instance profile carrying the node IAM role — MUST match exactly what Terraform creates.
+  # Created by terraform/modules/karpenter/ as petclinic-{env}-karpenter-node-profile.
+  # A name mismatch causes the node to launch but fail to join the cluster.
+  instanceProfile: "petclinic-dev-karpenter-node-profile"
+  blockDeviceMappings:
+    - deviceName: /dev/xvda
+      ebs:
+        volumeSize: 20Gi
+        volumeType: gp3
+        encrypted: true

@@ -38,6 +38,8 @@ resource "aws_subnet" "public" {
     Name                                         = "${local.name_prefix}-public-${count.index + 1}"
     "kubernetes.io/cluster/${local.name_prefix}" = "shared"
     "kubernetes.io/role/elb"                     = "1"
+    # Karpenter uses this tag to discover which subnets to launch nodes into
+    "karpenter.sh/discovery"                     = local.name_prefix
   })
 }
 
@@ -88,6 +90,8 @@ resource "aws_security_group" "eks_node" {
 
   tags = merge(var.tags, {
     Name = "${local.name_prefix}-node-sg"
+    # Karpenter uses this tag to discover which security group to attach to new nodes
+    "karpenter.sh/discovery" = local.name_prefix
   })
 
   lifecycle {

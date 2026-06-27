@@ -130,3 +130,18 @@ output "openai_secret_arn" {
   description = "Secrets Manager ARN for the OpenAI API key"
   value       = module.secrets.openai_secret_arn
 }
+
+output "karpenter_role_arn" {
+  description = "IRSA role ARN for Karpenter controller — used in Helm install serviceAccount annotation"
+  value       = module.karpenter.karpenter_role_arn
+}
+
+output "karpenter_queue_name" {
+  description = "SQS interruption queue name — passed to Karpenter Helm values as settings.interruptionQueue"
+  value       = module.karpenter.karpenter_queue_name
+}
+
+output "karpenter_instance_profile_name" {
+  description = "Instance profile name for Karpenter-launched nodes — referenced in EC2NodeClass"
+  value       = module.karpenter.karpenter_instance_profile_name
+}
