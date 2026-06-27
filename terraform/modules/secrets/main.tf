@@ -33,6 +33,29 @@ resource "aws_secretsmanager_secret_version" "openai_api_key" {
 }
 
 # ──────────────────────────────────────────────────────────────────────────────
+# Grafana Admin Credentials (CRIT-001 fix)
+# Stored in Secrets Manager so the password never appears in committed YAML.
+# ESO pulls it into a K8s Secret in the monitoring namespace via ExternalSecret CR.
+# ──────────────────────────────────────────────────────────────────────────────
+
+resource "aws_secretsmanager_secret" "grafana_admin" {
+  name        = "${var.project}/${var.environment}/grafana-admin"
+  description = "Grafana admin credentials for ${var.environment} observability stack"
+
+  tags = merge(local.tags, {
+    Name = "${var.project}-${var.environment}-grafana-admin"
+  })
+}
+
+resource "aws_secretsmanager_secret_version" "grafana_admin" {
+  secret_id     = aws_secretsmanager_secret.grafana_admin.id
+  secret_string = jsonencode({
+    username = "admin"
+    password = var.grafana_admin_password
+  })
+}
+
+# ──────────────────────────────────────────────────────────────────────────────
 # ESO IRSA Role (PETPLAT-37)
 # Grants External Secrets Operator permission to read from Secrets Manager.
 # Trust policy scoped to the ESO service account in the external-secrets namespace.

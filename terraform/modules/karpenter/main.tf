@@ -59,9 +59,25 @@ resource "aws_iam_policy" "karpenter" {
     Version = "2012-10-17"
     Statement = [
       {
-        Sid      = "KarpenterEC2"
-        Effect   = "Allow"
-        Action   = ["ec2:*"]
+        Sid    = "KarpenterEC2"
+        Effect = "Allow"
+        Action = [
+          "ec2:CreateFleet",
+          "ec2:CreateLaunchTemplate",
+          "ec2:CreateTags",
+          "ec2:DeleteLaunchTemplate",
+          "ec2:DescribeAvailabilityZones",
+          "ec2:DescribeImages",
+          "ec2:DescribeInstances",
+          "ec2:DescribeInstanceTypeOfferings",
+          "ec2:DescribeInstanceTypes",
+          "ec2:DescribeLaunchTemplates",
+          "ec2:DescribeSecurityGroups",
+          "ec2:DescribeSpotPriceHistory",
+          "ec2:DescribeSubnets",
+          "ec2:RunInstances",
+          "ec2:TerminateInstances",
+        ]
         Resource = "*"
       },
       {
@@ -84,9 +100,15 @@ resource "aws_iam_policy" "karpenter" {
         Resource = "*"
       },
       {
-        Sid      = "KarpenterSQS"
-        Effect   = "Allow"
-        Action   = ["sqs:*"]
+        Sid    = "KarpenterSQS"
+        Effect = "Allow"
+        Action = [
+          "sqs:GetQueueUrl",
+          "sqs:GetQueueAttributes",
+          "sqs:ReceiveMessage",
+          "sqs:DeleteMessage",
+          "sqs:ChangeMessageVisibility",
+        ]
         Resource = aws_sqs_queue.karpenter_interruption.arn
       },
       {

@@ -28,6 +28,9 @@ kubeconfig
 kubeconfig.*
 aws-credentials
 
+# Claude Code local overrides — may accumulate credentials/tokens
+.claude/settings.local.json
+
 # IDE
 .idea/
 .vscode/

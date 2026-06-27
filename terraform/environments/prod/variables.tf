@@ -38,3 +38,9 @@ variable "openai_api_key" {
   sensitive   = true
   default     = ""
 }
+
+variable "grafana_admin_password" {
+  description = "Grafana admin password — set in terraform.tfvars (gitignored, never commit). Min 12 chars."
+  type        = string
+  sensitive   = true
+}

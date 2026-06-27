@@ -20,6 +20,12 @@ variable "openai_api_key" {
   sensitive   = true
 }
 
+variable "grafana_admin_password" {
+  description = "Grafana admin password — set in terraform.tfvars, never hardcode. Min 12 chars."
+  type        = string
+  sensitive   = true
+}
+
 variable "oidc_provider_arn" {
   description = "OIDC provider ARN of the EKS cluster — used to create the ESO IRSA role"
   type        = string

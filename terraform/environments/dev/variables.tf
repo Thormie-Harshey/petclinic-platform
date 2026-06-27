@@ -34,6 +34,12 @@ variable "openai_api_key" {
   default     = ""
 }
 
+variable "grafana_admin_password" {
+  description = "Grafana admin password — set in terraform.tfvars (gitignored, never commit). Min 12 chars."
+  type        = string
+  sensitive   = true
+}
+
 variable "github_repo" {
   description = "GitHub repository allowed to assume the CI role — format: org/repo (e.g. Thormie-Harshey/petclinic-app)"
   type        = string

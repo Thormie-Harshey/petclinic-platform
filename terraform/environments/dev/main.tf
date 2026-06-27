@@ -87,11 +87,12 @@ module "dns" {
 module "secrets" {
   source = "../../modules/secrets"
 
-  project           = var.project
-  environment       = var.environment
-  openai_api_key    = var.openai_api_key
-  oidc_provider_arn = module.eks.oidc_provider_arn
-  oidc_provider_url = module.eks.oidc_provider_url
+  project                = var.project
+  environment            = var.environment
+  openai_api_key         = var.openai_api_key
+  grafana_admin_password = var.grafana_admin_password
+  oidc_provider_arn      = module.eks.oidc_provider_arn
+  oidc_provider_url      = module.eks.oidc_provider_url
 }
 
 module "github_oidc" {
